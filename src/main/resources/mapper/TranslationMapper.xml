@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.global.language.web_content_translate.repository.TranslationMapper">
+  <resultMap id="BaseResultMap" type="com.global.language.web_content_translate.model.enity.Translation">
+    <!--
+    @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="content_id" jdbcType="INTEGER" property="contentId" />
+    <result column="language_id" jdbcType="INTEGER" property="languageId" />
+    <result column="language_code" jdbcType="VARCHAR" property="languageCode" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
+    <result column="modified_at" jdbcType="TIMESTAMP" property="modifiedAt" />
+    <result column="enable" jdbcType="BIT" property="enable" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.global.language.web_content_translate.model.enity.Translation">
+    <!--
+    @mbg.generated
+    -->
+    <result column="translated_text" jdbcType="LONGVARCHAR" property="translatedText" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+    @mbg.generated
+    -->
+    id, content_id, language_id, language_code, created_by, created_at, modified_by, 
+    modified_at, `enable`
+  </sql>
+  <sql id="Blob_Column_List">
+    <!--
+    @mbg.generated
+    -->
+    translated_text
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    <!--
+    @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from translation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--
+    @mbg.generated
+    -->
+    delete from translation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.global.language.web_content_translate.model.enity.Translation">
+    <!--
+    @mbg.generated
+    -->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into translation (content_id, language_id, language_code, 
+      created_by, created_at, modified_by, 
+      modified_at, `enable`, translated_text
+      )
+    values (#{contentId,jdbcType=INTEGER}, #{languageId,jdbcType=INTEGER}, #{languageCode,jdbcType=VARCHAR}, 
+      #{createdBy,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=VARCHAR}, 
+      #{modifiedAt,jdbcType=TIMESTAMP}, #{enable,jdbcType=BIT}, #{translatedText,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.global.language.web_content_translate.model.enity.Translation">
+    <!--
+    @mbg.generated
+    -->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into translation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="contentId != null">
+        content_id,
+      </if>
+      <if test="languageId != null">
+        language_id,
+      </if>
+      <if test="languageCode != null">
+        language_code,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="modifiedBy != null">
+        modified_by,
+      </if>
+      <if test="modifiedAt != null">
+        modified_at,
+      </if>
+      <if test="enable != null">
+        `enable`,
+      </if>
+      <if test="translatedText != null">
+        translated_text,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="contentId != null">
+        #{contentId,jdbcType=INTEGER},
+      </if>
+      <if test="languageId != null">
+        #{languageId,jdbcType=INTEGER},
+      </if>
+      <if test="languageCode != null">
+        #{languageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedBy != null">
+        #{modifiedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedAt != null">
+        #{modifiedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enable != null">
+        #{enable,jdbcType=BIT},
+      </if>
+      <if test="translatedText != null">
+        #{translatedText,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.global.language.web_content_translate.model.enity.Translation">
+    <!--
+    @mbg.generated
+    -->
+    update translation
+    <set>
+      <if test="contentId != null">
+        content_id = #{contentId,jdbcType=INTEGER},
+      </if>
+      <if test="languageId != null">
+        language_id = #{languageId,jdbcType=INTEGER},
+      </if>
+      <if test="languageCode != null">
+        language_code = #{languageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedBy != null">
+        modified_by = #{modifiedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedAt != null">
+        modified_at = #{modifiedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enable != null">
+        `enable` = #{enable,jdbcType=BIT},
+      </if>
+      <if test="translatedText != null">
+        translated_text = #{translatedText,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.global.language.web_content_translate.model.enity.Translation">
+    <!--
+    @mbg.generated
+    -->
+    update translation
+    set content_id = #{contentId,jdbcType=INTEGER},
+      language_id = #{languageId,jdbcType=INTEGER},
+      language_code = #{languageCode,jdbcType=VARCHAR},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      modified_by = #{modifiedBy,jdbcType=VARCHAR},
+      modified_at = #{modifiedAt,jdbcType=TIMESTAMP},
+      `enable` = #{enable,jdbcType=BIT},
+      translated_text = #{translatedText,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.global.language.web_content_translate.model.enity.Translation">
+    <!--
+    @mbg.generated
+    -->
+    update translation
+    set content_id = #{contentId,jdbcType=INTEGER},
+      language_id = #{languageId,jdbcType=INTEGER},
+      language_code = #{languageCode,jdbcType=VARCHAR},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      modified_by = #{modifiedBy,jdbcType=VARCHAR},
+      modified_at = #{modifiedAt,jdbcType=TIMESTAMP},
+      `enable` = #{enable,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getTranslationByLanguageId" resultMap="BaseResultMap">
+    select * from translation
+    where language_id = #{languageId,jdbcType=INTEGER}
+    and enable =true
+  </select>
+
+  <select id="getTranslationByLanguageCode" resultMap="BaseResultMap">
+    select * from translation
+    where language_code = #{languageCode}
+      and enable =true
+  </select>
+
+  <select id="getTranslationByContentId" resultMap="BaseResultMap">
+    select * from translation
+    where content_id = #{contentId}
+      and enable =true
+  </select>
+
+  <select id="getContentTranslatedCount" resultType="com.global.language.web_content_translate.model.enity.IdCount">
+    select content_id as id,
+    ifnull(count(language_id),0) as count
+    from translation where content_id in
+      <foreach collection="contentIdList" item="contentId" open="(" close=")" separator=",">
+        #{contentId}
+      </foreach>
+    and enable = true
+    group by content_id
+  </select>
+
+  <select id="getTranslationByContentIdAndLanguage" resultMap="BaseResultMap">
+    select *
+    from translation
+    where enable = true
+      and language_id = #{languageId}
+      and content_id = #{contentId,jdbcType=INTEGER}
+  </select>
+</mapper>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.global.language.web_content_translate.repository.LanguageMapper">
+  <resultMap id="BaseResultMap" type="com.global.language.web_content_translate.model.enity.Language">
+    <!--
+    @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="iso_code" jdbcType="VARCHAR" property="isoCode" />
+    <result column="native_name" jdbcType="VARCHAR" property="nativeName" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
+    <result column="modified_at" jdbcType="TIMESTAMP" property="modifiedAt" />
+    <result column="enable" jdbcType="BIT" property="enable" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+    @mbg.generated
+    -->
+    id, `name`, iso_code, native_name, created_by, created_at, modified_by, modified_at, 
+    `enable`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--
+    @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from language
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--
+    @mbg.generated
+    -->
+    delete from language
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.global.language.web_content_translate.model.enity.Language">
+    <!--
+    @mbg.generated
+    -->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into language (`name`, iso_code, native_name, 
+      created_by, created_at, modified_by, 
+      modified_at, `enable`)
+    values (#{name,jdbcType=VARCHAR}, #{isoCode,jdbcType=VARCHAR}, #{nativeName,jdbcType=VARCHAR}, 
+      #{createdBy,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=VARCHAR}, 
+      #{modifiedAt,jdbcType=TIMESTAMP}, #{enable,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.global.language.web_content_translate.model.enity.Language">
+    <!--
+    @mbg.generated
+    -->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into language
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="isoCode != null">
+        iso_code,
+      </if>
+      <if test="nativeName != null">
+        native_name,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="modifiedBy != null">
+        modified_by,
+      </if>
+      <if test="modifiedAt != null">
+        modified_at,
+      </if>
+      <if test="enable != null">
+        `enable`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isoCode != null">
+        #{isoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="nativeName != null">
+        #{nativeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedBy != null">
+        #{modifiedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedAt != null">
+        #{modifiedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enable != null">
+        #{enable,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.global.language.web_content_translate.model.enity.Language">
+    <!--
+    @mbg.generated
+    -->
+    update language
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isoCode != null">
+        iso_code = #{isoCode,jdbcType=VARCHAR},
+      </if>
+      <if test="nativeName != null">
+        native_name = #{nativeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedBy != null">
+        modified_by = #{modifiedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedAt != null">
+        modified_at = #{modifiedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enable != null">
+        `enable` = #{enable,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.global.language.web_content_translate.model.enity.Language">
+    <!--
+    @mbg.generated
+    -->
+    update language
+    set `name` = #{name,jdbcType=VARCHAR},
+      iso_code = #{isoCode,jdbcType=VARCHAR},
+      native_name = #{nativeName,jdbcType=VARCHAR},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      modified_by = #{modifiedBy,jdbcType=VARCHAR},
+      modified_at = #{modifiedAt,jdbcType=TIMESTAMP},
+      `enable` = #{enable,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="delete">
+    update language set enable =false,modified_by=#{modifiedBy}
+    where id = #{id}
+  </update>
+
+  <select id="getAllLanguageList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from language
+    where enable = true
+  </select>
+
+  <select id="selectByIso" resultMap="BaseResultMap">
+    select * from language where enable=true
+    and iso_code=#{iso}
+  </select>
+
+</mapper>
