@@ -81,7 +81,7 @@ public class WebContentServiceImpl implements WebContentService {
     @Override
     public List<WebContentBo> getWebContentListByIdList(List<Integer> idList) {
         if (idList == null || idList.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
         List<WebContent> webContentList = webContentMapper.getWebContentListByIdList(idList);
         return list2BoList(webContentList);

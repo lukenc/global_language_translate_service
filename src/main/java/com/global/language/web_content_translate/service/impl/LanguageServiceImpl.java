@@ -44,14 +44,26 @@ public class LanguageServiceImpl implements LanguageService {
         return languageMapper.delete(id,userId);
     }
 
-    @Override
-    public List<LanguageBo> selectAllLanguageList() {
-        List<Language> languageList = languageMapper.getAllLanguageList();
-        if (languageList!=null){
-            return languageList.stream().map(LanguageBo::new).toList();
-        }
-        return Collections.emptyList();
+
+/**
+ * 获取所有语言列表
+ * @return 语言业务对象列表
+ */
+@Override
+public List<LanguageBo> selectAllLanguageList() {
+    // 获取所有语言列表
+    List<Language> languageList = languageMapper.getAllLanguageList();
+
+    // 如果语言列表不为空
+    if (languageList != null) {
+        // 将语言列表转换为语言业务对象列表并返回
+        return languageList.stream().map(LanguageBo::new).toList();
     }
+
+    // 如果语言列表为空，则返回空集合
+    return Collections.emptyList();
+}
+
 
     @Override
     public Language getLanguageByIso(String iso) {

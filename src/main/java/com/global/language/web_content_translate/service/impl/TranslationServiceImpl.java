@@ -76,36 +76,65 @@ public class TranslationServiceImpl implements TranslationService {
         return attachContentInfo(translationList);
     }
 
-    @Override
-    public List<TranslationBo> getTranslationByContentId(Integer contentId) {
-        List<Translation> translationList=  translationMapper.getTranslationByContentId(contentId);
-        return attachContentInfo(translationList);
-    }
 
-    @Override
-    public Map<Integer, Integer> getContentTranslatedCount(List<Integer> contentIdList) {
-        List<IdCount> idCountList = translationMapper.getContentTranslatedCount(contentIdList);
-        return idCountList != null ? idCountList.stream().collect(Collectors.toUnmodifiableMap(IdCount::getId, IdCount::getCount)) : Map.of();
-    }
+/**
+ * 根据内容ID获取翻译列表
+ * @param contentId 内容ID
+ * @return 翻译业务对象列表
+ */
+@Override
+public List<TranslationBo> getTranslationByContentId(Integer contentId) {
+    // 调用数据访问层，根据内容ID获取翻译列表
+    List<Translation> translationList = translationMapper.getTranslationByContentId(contentId);
 
-    private List<TranslationBo> attachContentInfo( List<Translation> translationList){
-        if (translationList==null){
-            return Collections.emptyList();
-        }
-        List<Integer> contentIdList = translationList.stream().map(Translation::getContentId).toList();
-        if (!contentIdList.isEmpty()){
-            List<WebContentBo> webContentList = webContentService.getWebContentListByIdList(contentIdList);
-            if (webContentList!=null){
-                Map<Integer, WebContentBo> id2WebContentMap = webContentList.stream().collect(Collectors.toMap(WebContentBo::getId, Function.identity()));
-                // 匹配数据
-                return translationList.stream().map(translation -> {
-                            WebContentBo webContentBo = id2WebContentMap.get(translation.getContentId());
-                            return TranslationBo.fromCombine(translation, webContentBo);
-                        }).toList();
-            }
-        }
+    // 调用附加内容信息的方法，将翻译列表与内容信息关联起来
+    return attachContentInfo(translationList);
+}
+
+
+
+/**
+ * 获取内容翻译计数的方法
+ * @param contentIdList 内容ID列表
+ * @return 内容ID和对应翻译计数的映射关系
+ */
+@Override
+public Map<Integer, Integer> getContentTranslatedCount(List<Integer> contentIdList) {
+    // 调用translationMapper的方法获取内容翻译计数列表
+    List<IdCount> idCountList = translationMapper.getContentTranslatedCount(contentIdList);
+
+    // 如果idCountList不为空，则将其转换为不可修改的映射关系并返回，否则返回一个空的映射关系
+    return idCountList != null ? idCountList.stream().collect(Collectors.toUnmodifiableMap(IdCount::getId, IdCount::getCount)) : Map.of();
+}
+
+
+/**
+ * 附加内容信息到翻译列表中
+ * @param translationList 翻译列表
+ * @return 附加了内容信息的翻译业务对象列表
+ */
+private List<TranslationBo> attachContentInfo(List<Translation> translationList) {
+    if (translationList == null) {
         return List.of();
     }
+
+    List<Integer> contentIdList = translationList.stream().map(Translation::getContentId).toList();
+    if (!contentIdList.isEmpty()) {
+        List<WebContentBo> webContentList = webContentService.getWebContentListByIdList(contentIdList);
+        if (webContentList != null) {
+            Map<Integer, WebContentBo> id2WebContentMap = webContentList.stream().collect(Collectors.toMap(WebContentBo::getId, Function.identity()));
+
+            // 匹配数据
+            return translationList.stream().map(translation -> {
+                WebContentBo webContentBo = id2WebContentMap.get(translation.getContentId());
+                return TranslationBo.fromCombine(translation, webContentBo);
+            }).toList();
+        }
+    }
+
+    return List.of();
+}
+
 
     @Override
     public OperationResult<?> importTranslations(MultipartFile file, String userId) {
@@ -177,30 +206,61 @@ public class TranslationServiceImpl implements TranslationService {
 
 
 
-    private int createTranslationFromExcel(Integer languageId,String languageCode,Integer contentId,String translatedText,String userId) {
-           Translation ori = translationMapper.getTranslationByContentIdAndLanguage(contentId, languageId);
-           if (ori!=null){
-              return edit(ori.getId(),languageCode,languageId,contentId,translatedText,userId);
-           }else {
-              return add(languageCode,languageId,contentId,translatedText,userId);
-           }
+
+/**
+ * 从Excel中创建翻译
+ * @param languageId 语言ID
+ * @param languageCode 语言代码
+ * @param contentId 内容ID
+ * @param translatedText 翻译文本
+ * @param userId 用户ID
+ * @return 返回翻译结果
+ */
+private int createTranslationFromExcel(Integer languageId, String languageCode, Integer contentId, String translatedText, String userId) {
+    // 根据内容ID和语言ID获取原始翻译
+    Translation ori = translationMapper.getTranslationByContentIdAndLanguage(contentId, languageId);
+    if (ori != null) {
+        // 如果原始翻译存在，则进行编辑操作
+        return edit(ori.getId(), languageCode, languageId, contentId, translatedText, userId);
+    } else {
+        // 如果原始翻译不存在，则进行添加操作
+        return add(languageCode, languageId, contentId, translatedText, userId);
+    }
+}
+
+
+
+/**
+ * 获取单元格的字符串值
+ *
+ * @param cell 单元格对象
+ * @return 单元格的字符串值，如果单元格为空则返回null
+ */
+private String getStringValue(Cell cell) {
+    if (cell == null) {
+        return null;
     }
 
-    private String getStringValue(Cell cell) {
-        if (cell == null) {
-            return null;
-        }
-        return switch (cell.getCellType()) {
-            case STRING -> cell.getStringCellValue();
-            case NUMERIC -> String.valueOf(cell.getNumericCellValue());
-            case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
-            default -> null;
-        };
+    // 根据单元格类型进行不同的处理
+    return switch (cell.getCellType()) {
+        case STRING -> cell.getStringCellValue(); // 如果是字符串类型，直接获取字符串值
+        case NUMERIC -> String.valueOf(cell.getNumericCellValue()); // 如果是数字类型，将数字转换为字符串
+        case BOOLEAN -> String.valueOf(cell.getBooleanCellValue()); // 如果是布尔类型，将布尔值转换为字符串
+        default -> null; // 其他类型返回null
+    };
+}
+
+
+/**
+ * 获取单元格的整数值。
+ *
+ * @param cell 单元格对象
+ * @return 单元格的整数值，如果单元格为空则返回null
+ */
+private Integer getIntValue(Cell cell) {
+    if (cell == null) {
+        return null;
     }
-    private Integer getIntValue(Cell cell) {
-        if (cell == null) {
-            return null;
-        }
-        return (int) cell.getNumericCellValue();
-    }
+    return (int) cell.getNumericCellValue();
+}
 }

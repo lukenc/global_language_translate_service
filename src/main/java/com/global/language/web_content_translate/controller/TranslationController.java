@@ -32,6 +32,11 @@ public class TranslationController {
     @Autowired
     TranslationService translationService;
 
+    /**
+     * 根据内容ID获取翻译列表
+     * @param contentId 内容ID
+     * @return 返回翻译列表
+     */
     @GetMapping("getTranslationListByContentId")
     public OperationResult<List<TranslationBo>> getTranslationListByContentId(Integer contentId){
         List<TranslationBo> translationBoList=translationService.getTranslationByContentId(contentId);
@@ -41,6 +46,11 @@ public class TranslationController {
         return OperationResult.ok();
     }
 
+    /**
+     * 添加翻译
+     * @param param 翻译参数
+     * @return 返回操作结果
+     */
     @PostMapping("addTranslation")
     public OperationResult<Void> addTranslation(@RequestBody TranslationAddParam param){
         //todo 通过认证信息获取用户信息id
@@ -52,6 +62,11 @@ public class TranslationController {
         return OperationResult.fail();
     }
 
+    /**
+     * 编辑翻译
+     * @param param 翻译参数
+     * @return 返回操作结果
+     */
     @PostMapping("editTranslation")
     public OperationResult<Void> editTranslation(@RequestBody TranslationEditParam param){
         //todo 通过认证信息获取用户信息id
@@ -63,6 +78,11 @@ public class TranslationController {
         return OperationResult.fail();
     }
 
+    /**
+     * 删除翻译
+     * @param param 删除参数
+     * @return 返回操作结果
+     */
     @PostMapping("deleteTranslation")
     public OperationResult<Void> editTranslation(@RequestBody DeleteParam param){
         //todo 通过认证信息获取用户信息id
@@ -74,8 +94,14 @@ public class TranslationController {
         return OperationResult.fail();
     }
 
+    /**
+     * 根据语言代码获取翻译
+     * @param languageCode 语言代码
+     * @return 返回翻译文件
+     * @throws IOException 抛出IO异常
+     */
     @GetMapping("getTranslationByLanguageCode")
-    public ResponseEntity<FileSystemResource> getTranslationByLanguageCode(String   languageCode) throws IOException{
+    public ResponseEntity<FileSystemResource> getTranslationByLanguageCode(String languageCode) throws IOException{
         List<TranslationBo> res= translationService.getTranslationByLanguageCode(languageCode);
         Map<String,List<TranslationBo>> type2TranslationsMap=res.stream().filter( o->o.getContentType()!=null).collect(Collectors.groupingBy(TranslationBo::getContentType));
         List<String > files=new ArrayList<>();
@@ -115,8 +141,13 @@ public class TranslationController {
                 .body(resource);
     }
 
+    /**
+     * 根据语言ID获取翻译列表
+     * @param languageId 语言ID
+     * @return 返回翻译列表
+     */
     @GetMapping("getTranslationByLanguageId")
-    public OperationResult<List<TranslationBo>> getTranslationByLanguageId(Integer  languageId){
+    public OperationResult<List<TranslationBo>> getTranslationByLanguageId(Integer languageId){
 
         List<TranslationBo> res= translationService.getTranslationByLanguageId(languageId);
         if (res!=null){
@@ -125,8 +156,11 @@ public class TranslationController {
         return OperationResult.fail();
     }
 
-
-
+    /**
+     * 导入翻译
+     * @param file 翻译文件
+     * @return 返回操作结果
+     */
     @PostMapping(value = "/importTranslation",consumes ="multipart/form-data")
     public OperationResult<?> importTranslation(@RequestPart("file") MultipartFile file ) {
         //todo 通过认证信息获取用户信息id
@@ -134,15 +168,23 @@ public class TranslationController {
         return translationService.importTranslations(file,userId);
     }
 
-
-
-
+    /**
+     * 创建文件
+     * @param filename 文件名
+     * @param content 文件内容
+     * @throws IOException 抛出IO异常
+     */
     private void createFile(String filename, String content) throws IOException {
         Path path = Paths.get(filename);
         Files.write(path, content.getBytes());
     }
 
-
+    /**
+     * 压缩文件
+     * @param filenames 文件名列表
+     * @param zipFilename 压缩文件名
+     * @throws IOException 抛出IO异常
+     */
     private void zipFiles(List<String> filenames, String zipFilename) throws IOException {
         try (var zos = new ZipOutputStream(Files.newOutputStream(Paths.get(zipFilename)))) {
             for (var filename : filenames) {
@@ -153,7 +195,5 @@ public class TranslationController {
             }
         }
     }
-
-
-
 }
+
