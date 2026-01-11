@@ -10,7 +10,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class WebContentServiceImpl implements WebContentService {
     @Override
     public int add(String originalContent, String type, String url, String userId) {
         WebContent content = WebContent.create(originalContent, type, url);
-        content.setCreatedAt(new Date(Instant.now().toEpochMilli()));
+        content.setCreatedAt(Date.from(Instant.now()));
         content.setCreatedBy(userId);
         int res = 0 ;
         try {
@@ -38,7 +37,7 @@ public class WebContentServiceImpl implements WebContentService {
         WebContent ori= webContentMapper.selectByUrl(webContent.getUrl());
        if (ori==null){
            try {
-               webContent.setCreatedAt(new Date(Instant.now().toEpochMilli()));
+               webContent.setCreatedAt(Date.from(Instant.now()));
                webContent.setCreatedBy(userId);
                return webContentMapper.insertSelective(webContent);
            }catch (DuplicateKeyException exception){
@@ -47,7 +46,7 @@ public class WebContentServiceImpl implements WebContentService {
        }
        else {
            webContent.setId(ori.getId());
-           webContent.setModifiedAt(new Date(Instant.now().toEpochMilli()));
+           webContent.setModifiedAt(Date.from(Instant.now()));
            webContent.setModifiedBy(userId);
            return webContentMapper.updateByPrimaryKeySelective(webContent);
        }
@@ -57,7 +56,7 @@ public class WebContentServiceImpl implements WebContentService {
     public int edit(Integer id, String originalContent, String type, String url, String userId) {
         WebContent content = WebContent.create(originalContent, type, url);
         content.setId(id);
-        content.setModifiedAt(new Date(Instant.now().toEpochMilli()));
+        content.setModifiedAt(Date.from(Instant.now()));
         content.setModifiedBy(userId);
         return webContentMapper.updateByPrimaryKeySelective(content);
     }

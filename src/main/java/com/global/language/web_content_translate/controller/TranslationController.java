@@ -8,7 +8,6 @@ import com.global.language.web_content_translate.model.param.DeleteParam;
 import com.global.language.web_content_translate.model.param.translation.TranslationAddParam;
 import com.global.language.web_content_translate.model.param.translation.TranslationEditParam;
 import com.global.language.web_content_translate.service.TranslationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,17 +19,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@RestController("translation")
+@RestController
+@RequestMapping("/translation")
 public class TranslationController {
-    @Autowired
-    TranslationService translationService;
+    private final TranslationService translationService;
+
+    public TranslationController(TranslationService translationService) {
+        this.translationService = translationService;
+    }
 
     /**
      * 根据内容ID获取翻译列表
@@ -55,7 +56,7 @@ public class TranslationController {
     public OperationResult<Void> addTranslation(@RequestBody TranslationAddParam param){
         //todo 通过认证信息获取用户信息id
         String userId="admin";
-        int res= translationService.add(param.getLanguageCode(),param.getLanguageId(),param.getContentId(),param.getTranslatedText(),userId);
+        int res= translationService.add(param.languageCode(),param.languageId(),param.contentId(),param.translatedText(),userId);
         if (res>0){
             return OperationResult.ok();
         }
@@ -71,7 +72,7 @@ public class TranslationController {
     public OperationResult<Void> editTranslation(@RequestBody TranslationEditParam param){
         //todo 通过认证信息获取用户信息id
         String userId="admin";
-        int res= translationService.edit(param.getId(),param.getLanguageCode(),param.getLanguageId(),param.getContentId(),param.getTranslatedText(),userId);
+        int res= translationService.edit(param.id(),param.languageCode(),param.languageId(),param.contentId(),param.translatedText(),userId);
         if (res>0){
             return OperationResult.ok();
         }
@@ -87,7 +88,7 @@ public class TranslationController {
     public OperationResult<Void> editTranslation(@RequestBody DeleteParam param){
         //todo 通过认证信息获取用户信息id
         String userId="admin";
-        int res= translationService.delete(param.getId(),userId);
+        int res= translationService.delete(param.id(),userId);
         if (res>0){
             return OperationResult.ok();
         }
@@ -108,8 +109,8 @@ public class TranslationController {
         String zipFilename=languageCode+".zip";
         if (type2TranslationsMap!=null&&!type2TranslationsMap.isEmpty()){
             type2TranslationsMap.forEach((k,v)->{
-                var filename = k+".json";
-                var content = "{}";
+                String filename = k+".json";
+                String content = "{}";
                 files.add(filename);
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String,String> content2TranslationMap=v.stream().collect(Collectors.toMap(TranslationBo::getContentUrl,TranslationBo::getTranslatedText));
@@ -186,9 +187,9 @@ public class TranslationController {
      * @throws IOException 抛出IO异常
      */
     private void zipFiles(List<String> filenames, String zipFilename) throws IOException {
-        try (var zos = new ZipOutputStream(Files.newOutputStream(Paths.get(zipFilename)))) {
-            for (var filename : filenames) {
-                var filePath = Paths.get(filename);
+        try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(Paths.get(zipFilename)))) {
+            for (String filename : filenames) {
+                Path filePath = Paths.get(filename);
                 zos.putNextEntry(new ZipEntry(filePath.getFileName().toString()));
                 Files.copy(filePath, zos);
                 zos.closeEntry();

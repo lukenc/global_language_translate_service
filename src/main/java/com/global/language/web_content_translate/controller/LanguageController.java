@@ -6,19 +6,19 @@ import com.global.language.web_content_translate.model.param.DeleteParam;
 import com.global.language.web_content_translate.model.param.language.LanguageAddParam;
 import com.global.language.web_content_translate.model.param.language.LanguageEditParam;
 import com.global.language.web_content_translate.service.LanguageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("language")
+@RestController
+@RequestMapping("/language")
 public class LanguageController {
 
-    @Autowired
-    LanguageService languageService;
+    private final LanguageService languageService;
+
+    public LanguageController(LanguageService languageService) {
+        this.languageService = languageService;
+    }
 
     /**
      * 添加语言
@@ -30,7 +30,7 @@ public class LanguageController {
         //todo 通过认证信息获取用户信息id
         String userId="admin";
         // 调用语言服务的添加方法
-        int res= languageService.add(param.getName(),param.getIsoCode(),param.getNativeName(),userId);
+        int res= languageService.add(param.name(),param.isoCode(),param.nativeName(),userId);
         if (res>0){
             // 添加成功，返回操作成功结果
             return OperationResult.ok();
@@ -49,7 +49,7 @@ public class LanguageController {
         //todo 通过认证信息获取用户信息id
         String userId="admin";
         // 调用语言服务的编辑方法
-        int res= languageService.edit(param.getId(),param.getName(),param.getIsoCode(),param.getNativeName(),userId);
+        int res= languageService.edit(param.id(),param.name(),param.isoCode(),param.nativeName(),userId);
         if (res>0){
             // 编辑成功，返回操作成功结果
             return OperationResult.ok();
@@ -68,7 +68,7 @@ public class LanguageController {
         //todo 通过认证信息获取用户信息id
         String userId="admin";
         // 调用语言服务的删除方法
-        int res= languageService.delete(param.getId(),userId);
+        int res= languageService.delete(param.id(),userId);
         if (res>0){
             // 删除成功，返回操作成功结果
             return OperationResult.ok();

@@ -25,7 +25,7 @@ public class LanguageServiceImpl implements LanguageService {
 
         Language language= Language.create(name,isoCode,nativeName);
         language.setCreatedBy(userId);
-        language.setCreatedAt(new Date(Instant.now().toEpochMilli()));
+        language.setCreatedAt(Date.from(Instant.now()));
         return languageMapper.insertSelective(language);
     }
 
@@ -34,7 +34,7 @@ public class LanguageServiceImpl implements LanguageService {
         Language language= Language.create(name,isoCode,nativeName);
         language.setId(id);
         language.setModifiedBy(userId);
-        language.setModifiedAt(new Date(Instant.now().toEpochMilli()));
+        language.setModifiedAt(Date.from(Instant.now()));
         return languageMapper.updateByPrimaryKeySelective(language);
     }
 

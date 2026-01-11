@@ -39,7 +39,7 @@ public class TranslationServiceImpl implements TranslationService {
     @Override
     public int add(String languageCode, Integer languageId, Integer contentId, String translatedText,String userId) {
         Translation translation = Translation.create(languageCode,languageId,contentId,translatedText);
-        translation.setCreatedAt(new Date(Instant.now().toEpochMilli()));
+        translation.setCreatedAt(Date.from(Instant.now()));
         translation.setCreatedBy(userId);
         return translationMapper.insertSelective(translation);
     }
@@ -49,7 +49,7 @@ public class TranslationServiceImpl implements TranslationService {
     public int edit(Integer id, String languageCode, Integer languageId, Integer contentId, String translatedText, String userId) {
         Translation translation = Translation.create(languageCode,languageId,contentId,translatedText);
         translation.setId(id);
-        translation.setModifiedAt(new Date(Instant.now().toEpochMilli()));
+        translation.setModifiedAt(Date.from(Instant.now()));
         translation.setModifiedBy(userId);
         return translationMapper.updateByPrimaryKeySelective(translation);
     }
@@ -58,7 +58,7 @@ public class TranslationServiceImpl implements TranslationService {
     public int delete(Integer id, String userId) {
         Translation translation = new Translation();
         translation.setId(id);
-        translation.setModifiedAt(new Date(Instant.now().toEpochMilli()));
+        translation.setModifiedAt(Date.from(Instant.now()));
         translation.setModifiedBy(userId);
         translation.setEnable(false);
         return translationMapper.updateByPrimaryKeySelective(translation);
@@ -138,8 +138,8 @@ private List<TranslationBo> attachContentInfo(List<Translation> translationList)
 
     @Override
     public OperationResult<?> importTranslations(MultipartFile file, String userId) {
-        var resultString = new StringJoiner(System.lineSeparator());
-        var successNum=0;
+        StringJoiner resultString = new StringJoiner(System.lineSeparator());
+        int successNum=0;
         try (InputStream inputStream = file.getInputStream();
              Workbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);

@@ -10,23 +10,25 @@ import com.global.language.web_content_translate.model.param.webContent.WebConte
 import com.global.language.web_content_translate.model.param.webContent.WebContentEditParam;
 import com.global.language.web_content_translate.service.TranslationService;
 import com.global.language.web_content_translate.service.WebContentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@RestController("/webContent")
+@RestController
+@RequestMapping("/webContent")
 public class WebContentController {
-    @Autowired
-    WebContentService webContentService;
-    @Autowired
-    TranslationService translationService;
+    private final WebContentService webContentService;
+    private final TranslationService translationService;
+
+    public WebContentController(WebContentService webContentService, TranslationService translationService) {
+        this.webContentService = webContentService;
+        this.translationService = translationService;
+    }
 
     /**
      * 添加网页内容
@@ -38,7 +40,7 @@ public class WebContentController {
     public OperationResult<Void> addWebContent(@RequestBody WebContentAddParam param) {
         //todo 通过认证信息获取用户信息id
         String userId = "admin";
-        int res = webContentService.add(param.getOriginalContent(), param.getType(), param.getUrl(), userId);
+        int res = webContentService.add(param.originalContent(), param.type(), param.url(), userId);
         if (res > 0) {
             return OperationResult.ok();
         } else {
@@ -58,7 +60,7 @@ public class WebContentController {
     public OperationResult<Void> editWebContent(@RequestBody WebContentEditParam param) {
         //todo 通过认证信息获取用户信息id
         String userId = "admin";
-        int res = webContentService.edit(param.getId(), param.getOriginalContent(), param.getType(), param.getUrl(), userId);
+        int res = webContentService.edit(param.id(), param.originalContent(), param.type(), param.url(), userId);
         if (res > 0) {
             return OperationResult.ok();
         }
@@ -75,7 +77,7 @@ public class WebContentController {
     public OperationResult<Void> deleteLanguage(@RequestBody DeleteParam param) {
         //todo 通过认证信息获取用户信息id
         String userId = "admin";
-        int res = webContentService.delete(param.getId(), userId);
+        int res = webContentService.delete(param.id(), userId);
         if (res > 0) {
             return OperationResult.ok();
         }

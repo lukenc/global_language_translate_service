@@ -7,7 +7,7 @@ spring:
     #??????
     username: ${SPRING_DATASOURCE_USERNAME:root}
     #?????
-    password: ${SPRING_DATASOURCE_PASSWORD:}
+    password: ${SPRING_DATASOURCE_PASSWORD:Luke199182}
     hikari:
       #????????????250????????????30?
       connection-timeout: 2000
@@ -25,8 +25,13 @@ spring:
       connection-test-query: select 1
     tomcat:
       jmx-enabled: true
+  # 使用虚拟线程提升高并发下的吞吐与资源利用
+  threads:
+    virtual:
+      enabled: true
 mybatis:
    mapper-locations: classpath:mapper/**.xml
    configuration:
      map-underscore-to-camel-case: true
-     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+     # 使用 SLF4J 日志以兼容 Native Image
+     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

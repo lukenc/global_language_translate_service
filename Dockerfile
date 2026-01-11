@@ -1,26 +1,14 @@
-FROM openjdk:8
+# Build stage: 使用 Java 21 与 Maven 离线缓存
+FROM maven:3.9-eclipse-temurin-21 AS builder
+WORKDIR /workspace
+COPY pom.xml .
+RUN mvn -q -B dependency:go-offline
+COPY src ./src
+RUN mvn -q -B package -DskipTests
 
-# 安装MySQL客户端
-#RUN apt-get update && apt-get install -y mysql-client
-
-# 安装MySQL服务
-RUN apt-get update && apt-get install -y mysql-server
-
-# 复制您的Java应用程序和MySQL配置文件
-COPY target/web_content_translate-0.0.1-SNAPSHOT.jar /app/web_content_translate.jar
-#COPY my.cnf /etc/mysql/my.cnf
-
-# 创建数据卷挂载点
-VOLUME /var/lib/mysql
-
-# 设置MySQL root用户的密码
-ENV MYSQL_ROOT_PASSWORD 123456
-
-# 暴露8080端口
+# Runtime stage: 精简 JRE 运行时
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=builder /workspace/target/web_content_translate-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
-# 暴露MySQL默认端口3306
-EXPOSE 3306
-
-# 启动MySQL服务并运行您的Java应用程序
-ENTRYPOINT service mysql start && java -jar /app/web_content_translate.jar
+ENTRYPOINT ["java","-jar","/app/app.jar"]
