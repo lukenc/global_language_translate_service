@@ -1,6 +1,6 @@
 # Global Language Translate Service (web_content_translate)
 
-[![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/technologies/downloads/#java21)
+[![Java Version](https://img.shields.io/badge/Java-25-orange.svg)](https://www.oracle.com/java/technologies/downloads/#java25)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![GraalVM](https://img.shields.io/badge/GraalVM-Native%20Image-blue.svg)](https://www.graalvm.org/)
 
@@ -8,7 +8,7 @@
 
 ## 🚀 核心亮点
 
-- **Spring Boot 4.0 + Java 21**: 采用前沿版本，充分利用 Java 21 的语法特性与性能优化。
+- **Spring Boot 4.0 + Java 25**: 采用前沿版本，充分利用 Java 25 的语法特性与性能优化。
 - **GraalVM Native Image**: 深度适配原生镜像，支持将应用编译为本地二进制文件，实现 **毫秒级启动** 和 **极低内存占用**。
 - **Virtual Threads (虚拟线程)**: 默认开启虚拟线程支持，显著提升高并发场景下的吞吐量与资源利用率。
 - **MyBatis Native 适配**: 通过 `NativeRuntimeHints` 完美解决 MyBatis 在原生镜像下的反射与代理问题。
@@ -49,7 +49,7 @@ com.global.language.web_content_translate
 ## 🛠 快速上手
 
 ### 环境要求
-- JDK 21+
+- JDK 25+
 - GraalVM (若需构建原生镜像)
 - MySQL 8.0+
 
